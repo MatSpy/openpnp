@@ -102,7 +102,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     @Attribute(required = false)
     protected int connectWaitTimeMilliseconds = 3000;
 
-    @Deprecated
+    
+//    @Deprecated
     @Attribute(required = false)
     protected double homeCoordinateX = -437.;
     
@@ -933,7 +934,23 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     public void setScaleFactorY(double scaleFactorY) {
         this.scaleFactorY = scaleFactorY;
     }
+    
+    public double getHomeCoordinateX() {
+        return this.homeCoordinateX;
+    }
 
+    public void setHomeCoordinateX(double homeCoordinateX) {
+        this.homeCoordinateX = homeCoordinateX;
+    }
+
+    public double getHomeCoordinateY() {
+        return this.homeCoordinateY;
+    }
+
+    public void setHomeCoordinateY(double homeCoordinateY) {
+        this.homeCoordinateY = homeCoordinateY;
+    }    
+    
     @Deprecated
     @Override
     public void migrateDriver(Machine machine) throws Exception {
