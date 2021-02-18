@@ -208,6 +208,20 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             a.setName("Rails");
             machine.addActuator(a);
         }
+        
+        a = (ReferenceActuator) machine.getActuatorByName("Feeder");
+        if (a == null) {
+            a = new ReferenceActuator();
+            a.setName("Feeder");
+            machine.addActuator(a);
+        }
+        
+        a = (ReferenceActuator) machine.getActuatorByName("Peeler");
+        if (a == null) {
+            a = new ReferenceActuator();
+            a.setName("Peeler");
+            machine.addActuator(a);
+        }
     }
     
     public synchronized void connect() throws Exception {
@@ -491,7 +505,63 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         
         pollFor(0x06, 0x42);
     }
+    
+    private void feed() throws Exception {
+        write(0x3f);
+        expect(0x0c);
+        
+        write(0x47);
+        read();
 
+        write(0xff);
+        expect(0x00);
+        
+        write(0x47);
+        read();
+        
+        byte[] b = new byte[8];
+        // Speed is percentage of max speed.  Speed is really 10-130
+        //putInt16((int) ((120. * speed)+10), b, 0);
+        b[0] = (byte) 0x32;
+        b[1] = (byte) 0x04;
+        writeWithChecksum(b);
+        
+        write(0x3f);
+        expect(0x0c);
+        
+        write(0x47);
+        read();
+        
+        //pollFor(0x47, 0x42);
+    }
+
+    private void peel() throws Exception {
+        write(0x4c);
+        expect(0x01);
+        
+        write(0xcc);
+        expect(0x09);
+        
+        byte[] b = new byte[8];
+        // Speed is percentage of max speed.  Speed is really 10-130
+        //putInt16((int) ((120. * speed)+10), b, 0);
+        b[0] = (byte) 0x1;
+        b[1] = (byte) 0x04;
+        b[2] = (byte) 0x50;
+        writeWithChecksum(b);
+        
+
+        
+        pollFor(0x0c, 0x49);
+    }
+    
+    @Override
+    public Length getFeedRatePerSecond() {
+        // Default implementation for feeders that don't implement an extra feed-rate. 
+        // The axes' fee-rate will be used.
+        return new Length(250, getUnits());
+    }
+    
     @Override
     public void moveTo(ReferenceHeadMountable hm, MoveToCommand move)
             throws Exception {
@@ -663,6 +733,16 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 }
                 break;
             }
+            case "Feeder": {
+            	peel();
+                feed();
+            break;
+            }
+            case "Peeler": {
+                peel();
+                feed();
+            break;
+        }
         }
     }
 

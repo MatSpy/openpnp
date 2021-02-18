@@ -122,11 +122,14 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 if (image != null) { 
                     broadcastCapture(captureForPreview());
                 }
+                
+//                Logger.trace(String.format("CAMERA MAT!!!!!!!"));
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(1000 / fps);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 break;
             }
@@ -161,6 +164,12 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             return;
         }
         Unirest.get(funcUrl.toString());
+        
+        try {
+            ImageIO.read(funcUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setCameraExposure() {
@@ -178,6 +187,13 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             return;
         }
         Unirest.get(funcUrl.toString());
+        
+        try {
+            ImageIO.read(funcUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private void setCameraGain() {
@@ -195,6 +211,13 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             return;
         }
         Unirest.get(funcUrl.toString());
+        
+        try {
+            ImageIO.read(funcUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private void setCameraLt() {
@@ -213,6 +236,12 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             return;
         }
         Unirest.get(funcUrl.toString());
+        
+        try {
+            ImageIO.read(funcUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void cameraReset() {
@@ -229,7 +258,14 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             return;
         }
         Unirest.get(funcUrl.toString());
+    
+        try {
+            ImageIO.read(funcUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    
 
     private void initCamera() {
         Logger.trace(String.format("initCamera() [cameraId:%d, width: %d, height: %d]", cameraId, width, height));
