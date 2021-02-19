@@ -35,6 +35,7 @@ import org.openpnp.gui.MainFrame;
 import org.openpnp.gui.support.PropertySheetWizardAdapter;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.neoden4.NeoDen4Driver;
+import org.openpnp.machine.neoden4.NeoDen4FeederActuator;
 import org.openpnp.machine.neoden4.Neoden4Camera;
 import org.openpnp.machine.rapidplacer.RapidFeeder;
 import org.openpnp.machine.reference.axis.ReferenceCamClockwiseAxis;
@@ -360,6 +361,7 @@ public class ReferenceMachine extends AbstractMachine {
         l.add(ReferenceActuator.class);
         l.add(HttpActuator.class);
         l.add(ScriptActuator.class);
+        l.add(NeoDen4FeederActuator.class);
         return l;
     }
 

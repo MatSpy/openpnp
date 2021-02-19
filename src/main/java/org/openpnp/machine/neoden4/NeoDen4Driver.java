@@ -506,36 +506,36 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         pollFor(0x06, 0x42);
     }
     
-    private void feed() throws Exception {
+    public void feed(int id, int strength, int feedRate) throws Exception {
         write(0x3f);
         expect(0x0c);
         
-        write(0x47);
+        write(0x46+id);
         read();
 
         write(0xff);
         expect(0x00);
         
-        write(0x47);
+        write(0x46+id);
         read();
         
         byte[] b = new byte[8];
         // Speed is percentage of max speed.  Speed is really 10-130
         //putInt16((int) ((120. * speed)+10), b, 0);
-        b[0] = (byte) 0x32;
-        b[1] = (byte) 0x04;
+        b[0] = (byte) strength;
+        b[1] = (byte) feedRate;
         writeWithChecksum(b);
         
         write(0x3f);
         expect(0x0c);
         
-        write(0x47);
+        write(0x46+id);
         read();
         
         //pollFor(0x47, 0x42);
     }
 
-    private void peel() throws Exception {
+    public void peel(int id, int strength, int feedRate) throws Exception {
         write(0x4c);
         expect(0x01);
         
@@ -545,9 +545,9 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         byte[] b = new byte[8];
         // Speed is percentage of max speed.  Speed is really 10-130
         //putInt16((int) ((120. * speed)+10), b, 0);
-        b[0] = (byte) 0x1;
-        b[1] = (byte) 0x04;
-        b[2] = (byte) 0x50;
+        b[0] = (byte) id;
+        b[1] = (byte) feedRate;
+        b[2] = (byte) strength;
         writeWithChecksum(b);
         
 
@@ -734,13 +734,13 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 break;
             }
             case "Feeder": {
-            	peel();
-                feed();
+            	peel(1,50,4);
+                feed(1,50,4);
             break;
             }
             case "Peeler": {
-                peel();
-                feed();
+                peel(1,50,4);
+                feed(1,50,4);
             break;
         }
         }
