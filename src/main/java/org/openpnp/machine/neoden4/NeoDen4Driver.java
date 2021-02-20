@@ -719,7 +719,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             }
             case "Lights-Up": {
                 if (on) {
-                    actuate(actuator, 2.0);
+                    actuate(actuator, 1.0);
                 } else {
                     actuate(actuator, 0.0);
                 }
