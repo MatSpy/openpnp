@@ -92,6 +92,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     public static final String ACT_N2_BLOW = "N2-Blow";
     public static final String ACT_N3_BLOW = "N3-Blow";
     public static final String ACT_N4_BLOW = "N4-Blow";
+    
+    private double moveCompensationDistance = 0.5;
 
     @Attribute(required = false)
     protected LengthUnit units = LengthUnit.Millimeters;
@@ -403,6 +405,14 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         throw new Exception("Not supported in this driver");
     }
 
+    private void moveXyCompensated(double x, double y) throws Exception {
+    	double comp = moveCompensationDistance;
+    	moveXy(x+comp, y+comp);
+    	//Compensate with low speed
+    	setMoveSpeed(0.1);
+    	moveXy(x,y);
+    }
+
     private void moveXy(double x, double y) throws Exception {
         write(0x48);
         expect(0x05);
@@ -421,7 +431,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             throw new Exception("moveXy timeout while waiting for status==ready");
         }
     }
-
+    
     private Boolean isStatusReady() throws Exception {
         pollFor(0x45, 0x09);
         pollFor(0x05, 0x14);
@@ -490,7 +500,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     }
 
     private void setMoveSpeed(double speed) throws Exception {
-        write(0x46);
+    	write(0x46);
         expect(0x0a);
         
         write(0xc6);
@@ -586,7 +596,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         y = Double.isNaN(y) ? this.y : y;
         if (x != this.x || y != this.y) {
             setMoveSpeed(speed);
-            moveXy(x, y);
+            moveXyCompensated(x, y);
             
             this.x = x;
             this.y = y;
