@@ -129,7 +129,7 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(10);
+                Thread.sleep(1000/fps);
             } catch (InterruptedException e) {
                 break;
             }
