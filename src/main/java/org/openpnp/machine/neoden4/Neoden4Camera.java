@@ -98,8 +98,32 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             if (snapshotURI == null) {
                 return null;
             }
-            BufferedImage img = ImageIO.read(snapshotURI);
-            return img;
+            
+        	boolean tryCapture = true; 
+        	if(actuatorCameraSw != null) {
+        		Object value = actuatorCameraSw.getLastActuationValue();
+        		if(value != null && (value instanceof Double)) {
+        			double valueDouble = (Double)value;
+        			if(cameraId != (int)valueDouble) {
+        				tryCapture = false;
+        			}
+        			else {
+        				tryCapture = true;
+        			}
+        		}
+        	}
+            
+            
+        	if(tryCapture) {
+	            BufferedImage img = ImageIO.read(snapshotURI);
+	            return img;
+        	}else
+        	{
+        		Thread.sleep(100);
+        		return null;
+        	}
+        	
+        	
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -122,39 +146,23 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
         }
 
         while (!Thread.interrupted()) {
-        	
-        	boolean tryCapture = true; 
-        	if(actuatorCameraSw != null) {
-        		Object value = actuatorCameraSw.getLastActuationValue();
-        		if(value != null && (value instanceof Double)) {
-        			double valueDouble = (Double)value;
-        			if(cameraId != (int)valueDouble) {
-        				tryCapture = false;
-        			}
-        			else {
-        				tryCapture = true;
-        			}
+
+        	try {
+
+        		BufferedImage image = internalCapture();
+        		if (image != null) { 
+        			broadcastCapture(captureForPreview());
         		}
+
+
+        		//                Logger.trace(String.format("CAMERA MAT!!!!!!!"));
+
+        	} catch (Exception e) {
+        		e.printStackTrace();
         	}
-        	
-            try {
-            	
-            	if(tryCapture) {
-            		
-	                BufferedImage image = internalCapture();
-	                if (image != null) { 
-	                    broadcastCapture(captureForPreview());
-	                }
-                
-            	}
-//                Logger.trace(String.format("CAMERA MAT!!!!!!!"));
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-//                Thread.sleep(1000/fps);
-                Thread.sleep(1);
+        	try {
+        		Thread.sleep(1000/fps);
+//                Thread.sleep(1);
             } catch (InterruptedException e) {
                 break;
             }
