@@ -35,11 +35,14 @@ import javax.xml.soap.SOAPException;
 
 import com.mashape.unirest.http.Unirest;
 
+
 import org.apache.http.client.utils.URIBuilder;
 import org.openpnp.CameraListener;
 import org.openpnp.gui.support.Wizard;
 import org.openpnp.machine.reference.ReferenceCamera;
+import org.openpnp.model.Configuration;
 import org.openpnp.machine.neoden4.wizards.Neoden4CameraConfigurationWizard;
+import org.openpnp.spi.Actuator;
 import org.openpnp.spi.PropertySheetHolder;
 import org.simpleframework.xml.Attribute;
 import org.pmw.tinylog.Logger;
@@ -73,6 +76,8 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
     @Attribute(required = false)
     private int shiftY = 0;
 
+    private Actuator actuatorCameraSw = null;
+    
     private Thread thread;
     private boolean dirty = false;
 
@@ -117,12 +122,31 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
         }
 
         while (!Thread.interrupted()) {
+        	
+        	boolean tryCapture = true; 
+        	if(actuatorCameraSw != null) {
+        		Object value = actuatorCameraSw.getLastActuationValue();
+        		if(value != null && (value instanceof Double)) {
+        			double valueDouble = (Double)value;
+        			if(cameraId != (int)valueDouble) {
+        				tryCapture = false;
+        			}
+        			else {
+        				tryCapture = true;
+        			}
+        		}
+        	}
+        	
             try {
-                BufferedImage image = internalCapture();
-                if (image != null) { 
-                    broadcastCapture(captureForPreview());
-                }
+            	
+            	if(tryCapture) {
+            		
+	                BufferedImage image = internalCapture();
+	                if (image != null) { 
+	                    broadcastCapture(captureForPreview());
+	                }
                 
+            	}
 //                Logger.trace(String.format("CAMERA MAT!!!!!!!"));
                 
             } catch (Exception e) {
@@ -310,6 +334,9 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 setCameraGain();
                 setCameraLt();
                 setCameraExposure();
+                
+                actuatorCameraSw = Configuration.get().getMachine().getActuatorByName("NeoCamSw");
+                
             }
         }
         catch (Exception e) {
