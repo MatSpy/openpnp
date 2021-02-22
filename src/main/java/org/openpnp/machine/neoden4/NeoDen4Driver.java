@@ -405,11 +405,14 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         throw new Exception("Not supported in this driver");
     }
 
-    private void moveXyCompensated(double x, double y) throws Exception {
+    private void moveXySafe(double x, double y) throws Exception {
     	double comp = moveCompensationDistance;
-    	moveXy(x+comp, y+comp);
-    	//Compensate with low speed
-    	setMoveSpeed(0.1);
+    	
+        moveZ(1, 0);
+        moveZ(2, 0);
+        moveZ(3, 0);
+        moveZ(4, 0);
+    	
     	moveXy(x,y);
     }
 
@@ -491,7 +494,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         expect(0x05);
 
         byte[] b = new byte[8];
-        putInt16((int) (c * 10.), b, 0);
+        putInt16((int) (-c * 10.), b, 0);
         b[2] = 0x32;
         b[3] = (byte) nozzle;
         writeWithChecksum(b);
@@ -596,7 +599,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         y = Double.isNaN(y) ? this.y : y;
         if (x != this.x || y != this.y) {
             setMoveSpeed(speed);
-            moveXyCompensated(x, y);
+            moveXySafe(x, y);
             
             this.x = x;
             this.y = y;
