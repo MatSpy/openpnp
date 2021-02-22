@@ -149,10 +149,10 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
 
         	try {
 
-        		BufferedImage image = internalCapture();
-        		if (image != null) { 
-        			broadcastCapture(captureForPreview());
-        		}
+        		//BufferedImage image = internalCapture();
+//        		if (image != null) { 
+//        			broadcastCapture(captureForPreview());
+//        		}
 
 
         		//                Logger.trace(String.format("CAMERA MAT!!!!!!!"));
