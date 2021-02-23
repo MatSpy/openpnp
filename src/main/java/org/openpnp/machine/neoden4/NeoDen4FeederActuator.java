@@ -36,6 +36,7 @@ import org.openpnp.model.Configuration;
 import org.openpnp.model.Length;
 import org.openpnp.model.LengthUnit;
 import org.openpnp.model.Location;
+import org.openpnp.model.Motion.MotionOption;
 import org.openpnp.spi.Camera;
 import org.openpnp.spi.Driver;
 import org.openpnp.spi.PropertySheetHolder;
@@ -80,10 +81,12 @@ public class NeoDen4FeederActuator extends ReferenceActuator{
     
   @Override
   public void actuate(boolean on) throws Exception {
-      Logger.debug("{}.actuate({})", getName(), on);
-      NeoDen4Driver driver = (NeoDen4Driver)getDriver();
-      driver.feed(feederId, feedStrength, feedLength);
-      driver.peel(peelerId, peelStrength, peelLength);
+	  if(on == true) {
+	      Logger.debug("{}.actuate({})", getName(), on);
+	      NeoDen4Driver driver = (NeoDen4Driver)getDriver();
+	      driver.feed(feederId, feedStrength, feedLength);
+	      driver.peel(peelerId, peelStrength, peelLength);
+	  }
       
   }
     
@@ -136,6 +139,11 @@ public class NeoDen4FeederActuator extends ReferenceActuator{
 
   public void setPeelLength(int peelLength) {
       this.peelLength = peelLength;
+  }
+  
+  @Override
+  public void moveTo(Location location, MotionOption... options) throws Exception{
+	  
   }
   
 	//===========================================================

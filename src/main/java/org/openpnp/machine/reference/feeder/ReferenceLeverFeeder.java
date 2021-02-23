@@ -123,7 +123,7 @@ public class ReferenceLeverFeeder extends ReferenceFeeder {
 
         Head head = nozzle.getHead();
 
-        Actuator actuator = head.getActuatorByName(actuatorName);
+        Actuator actuator =  Configuration.get().getMachine().getActuatorByName(actuatorName);
 
         if (actuator == null) {
             throw new Exception(String.format("No Actuator found with name %s on feed Head %s",
@@ -133,7 +133,7 @@ public class ReferenceLeverFeeder extends ReferenceFeeder {
 		Actuator peelOffActuator = null;
 
 		if (peelOffActuatorName != null) {
-			peelOffActuator = head.getActuatorByName(peelOffActuatorName);
+			peelOffActuator =  Configuration.get().getMachine().getActuatorByName(peelOffActuatorName);
 		}
 
         head.moveToSafeZ();
@@ -153,7 +153,7 @@ public class ReferenceLeverFeeder extends ReferenceFeeder {
 		    	actuator.actuate(true);
 		    
 	            // Push the lever
-	            actuator.moveTo(feedEndLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
+	            //actuator.moveTo(feedEndLocation, feedSpeed * actuator.getHead().getMachine().getSpeed());
 		    
 			    // Start the take up actuator
 		    	if (peelOffActuator != null) {

@@ -1,5 +1,6 @@
 package org.openpnp.machine.neoden4;
 
+import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
@@ -26,6 +27,10 @@ import org.openpnp.spi.Nozzle;
 import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
+
+import org.openpnp.util.Utils2D;
+
+import java.awt.geom.Point2D;
 
 @Root
 public class NeoDen4Driver extends AbstractReferenceDriver {
@@ -92,8 +97,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     public static final String ACT_N2_BLOW = "N2-Blow";
     public static final String ACT_N3_BLOW = "N3-Blow";
     public static final String ACT_N4_BLOW = "N4-Blow";
-    
-    private double moveCompensationDistance = 0.5;
+  
 
     @Attribute(required = false)
     protected LengthUnit units = LengthUnit.Millimeters;
@@ -123,6 +127,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     private Set<Nozzle> pickedNozzles = new HashSet<>();
 
 
+    double globalOffsetX = 0, globalOffsetY = 0;
+    
     double x = 0, y = 0;
     double z1 = 0, z2 = 0, z3 = 0, z4 = 0;
     double c1 = 0, c2 = 0, c3 = 0, c4 = 0;
@@ -390,29 +396,43 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         
         this.x = homeLocation.getCoordinate(homeLocation.getAxis(this, Axis.Type.X), units);
         this.y = homeLocation.getCoordinate(homeLocation.getAxis(this, Axis.Type.Y), units);
+      
     }
 
     @Override
     public void setGlobalOffsets(ReferenceMachine machine, AxesLocation location)
             throws Exception {
         // TODO: if the driver can do it, please implement to support visual homing. 
-        throw new Exception("Not supported in this driver");
+//        throw new Exception("Not supported in this driver 1");
+    	
+    	globalOffsetX = location.getCoordinate(location.getAxis(Axis.Type.X)) - this.x + globalOffsetX;
+    	globalOffsetY = location.getCoordinate(location.getAxis(Axis.Type.Y)) - this.y + globalOffsetY;
+    	Logger.debug(String.format("Set global offset to %.3f,%.3f", globalOffsetX, globalOffsetY));
     }
 
     @Override
     public AxesLocation getReportedLocation(long timeout) throws Exception {
         // TODO: if the driver can do it, please implement. 
-        throw new Exception("Not supported in this driver");
+        throw new Exception("Not supported in this driver 2");
     }
 
     private void moveXySafe(double x, double y) throws Exception {
-    	double comp = moveCompensationDistance;
     	
-        moveZ(1, 0);
-        moveZ(2, 0);
-        moveZ(3, 0);
-        moveZ(4, 0);
+        x -= globalOffsetX;
+        y -= globalOffsetY;
     	
+    	Point2D.Double start = new Point2D.Double(this.x, this.y);
+    	Point2D.Double end = new Point2D.Double(x,y);
+    	
+    	//allow moves max 3mm with nozzles lowered
+    	if(Utils2D.distance(start,end)>3.1) {
+            moveZ(1, 0);
+            moveZ(2, 0);
+            moveZ(3, 0);
+            moveZ(4, 0);		
+    	}
+        
+        
     	moveXy(x,y);
     }
 

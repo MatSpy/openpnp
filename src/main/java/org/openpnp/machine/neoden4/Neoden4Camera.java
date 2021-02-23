@@ -99,7 +99,7 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 return null;
             }
             
-        	boolean tryCapture = true; 
+        	boolean tryCapture = false; 
         	if(actuatorCameraSw != null) {
         		Object value = actuatorCameraSw.getLastActuationValue();
         		if(value != null && (value instanceof Double)) {
@@ -344,7 +344,9 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 setCameraExposure();
                 
                 actuatorCameraSw = Configuration.get().getMachine().getActuatorByName("NeoCamSw");
-                
+                if(actuatorCameraSw != null) {
+                	actuatorCameraSw.actuate(1);
+                }
             }
         }
         catch (Exception e) {

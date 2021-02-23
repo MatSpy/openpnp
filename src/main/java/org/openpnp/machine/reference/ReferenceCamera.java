@@ -196,7 +196,7 @@ public abstract class ReferenceCamera extends AbstractCamera implements Referenc
             g.drawLine(640, 0, 0, 480);
             g.dispose();
         }
-        Logger.warn("Camera {} failed to return an image after {} tries.", this, CAPTURE_RETRY_COUNT);
+        //Logger.warn("Camera {} failed to return an image after {} tries.", this, CAPTURE_RETRY_COUNT);
         return CAPTURE_ERROR_IMAGE;
     }
     
