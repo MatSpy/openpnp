@@ -126,7 +126,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     private boolean connected;
     private Set<Nozzle> pickedNozzles = new HashSet<>();
 
-
+    double backlashCompensation = 1;
     double globalOffsetX = 0, globalOffsetY = 0;
     
     double x = 0, y = 0;
@@ -432,7 +432,9 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             moveZ(4, 0);		
     	}
         
-        
+    	double comp = backlashCompensation;
+        moveXy(x+comp, y+comp);
+        setMoveSpeed(0.05);
     	moveXy(x,y);
     }
 

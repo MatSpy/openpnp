@@ -128,12 +128,12 @@ public class SwitcherCamera extends ReferenceCamera implements Runnable {
     public void run() {
         while (!Thread.interrupted()) {
             broadcastCapture(captureForPreview());
-            try {
-                Thread.sleep(1000 / fps);
-            }
-            catch (InterruptedException e) {
-                return;
-            }
+//            try {
+////                Thread.sleep(1);
+//            }
+//            catch (InterruptedException e) {
+//                return;
+//            }
         }
     }
 
