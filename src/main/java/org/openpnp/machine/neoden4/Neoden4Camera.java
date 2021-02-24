@@ -35,6 +35,7 @@ import org.openpnp.spi.PropertySheetHolder;
 import org.pmw.tinylog.Logger;
 import org.simpleframework.xml.Attribute;
 
+import org.openpnp.model.Configuration;
 import com.mashape.unirest.http.Unirest;
 
 /**
