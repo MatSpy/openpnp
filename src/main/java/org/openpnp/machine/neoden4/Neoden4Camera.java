@@ -74,9 +74,14 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
 
     public Neoden4Camera() {
     }
-
+    
+//    @Override
+//    public BufferedImage captureTransformed() {
+//    	return null;
+//    }
+    
     @Override
-    public BufferedImage internalCapture() {
+    public synchronized BufferedImage internalCapture() {
         //Logger.trace(String.format("internalCapture() [cameraId:%d]", cameraId));
         if (!ensureOpen()) {
             return null;
@@ -86,23 +91,24 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 return null;
             }
             
-        	boolean tryCapture = false; 
-        	if(actuatorCameraSw != null) {
-        		Object value = actuatorCameraSw.getLastActuationValue();
-        		if(value != null && (value instanceof Double)) {
-        			double valueDouble = (Double)value;
-        			if(cameraId != (int)valueDouble) {
-        				tryCapture = false;
-        			}
-        			else {
-        				tryCapture = true;
-        			}
-        		}
-        	}
+        	boolean tryCapture = true; 
+//        	if(actuatorCameraSw != null) {
+//        		Object value = actuatorCameraSw.getLastActuationValue();
+//        		if(value != null && (value instanceof Double)) {
+//        			double valueDouble = (Double)value;
+//        			if(cameraId != (int)valueDouble) {
+//        				tryCapture = false;
+//        			}
+//        			else {
+//        				tryCapture = true;
+//        			}
+//        		}
+//        	}
             
             
         	if(tryCapture) {
 	            BufferedImage img = ImageIO.read(snapshotURI);
+	            Thread.sleep(10);
 	            return img;
         	}else
         	{
@@ -286,7 +292,7 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
                 
                 actuatorCameraSw = Configuration.get().getMachine().getActuatorByName("NeoCamSw");
                 if(actuatorCameraSw != null) {
-                	actuatorCameraSw.actuate(1);
+//                	actuatorCameraSw.actuate(1);
                 }
             }
         }
