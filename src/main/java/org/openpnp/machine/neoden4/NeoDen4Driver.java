@@ -416,26 +416,44 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         throw new Exception("Not supported in this driver 2");
     }
 
+    private double distance(double dX, double dY) {
+    	Point2D.Double start = new Point2D.Double(0, 0);
+    	Point2D.Double end = new Point2D.Double(dX,dY);
+    	double result = Utils2D.distance(start,end);
+    	return result;
+    }
+    
+
+    
+    private void retractNozzles() throws Exception {
+    	if(this.z1 != 0 || this.z2 !=0 || this.z3 !=0  || this.z4 != 0) {
+            moveZ(1, 0);
+            moveZ(2, 0);
+            moveZ(3, 0);
+            moveZ(4, 0);
+            Thread.sleep(300);
+    	}
+    }
+    
     private void moveXySafe(double x, double y) throws Exception {
     	
         x -= globalOffsetX;
         y -= globalOffsetY;
     	
-    	Point2D.Double start = new Point2D.Double(this.x, this.y);
-    	Point2D.Double end = new Point2D.Double(x,y);
+        Logger.debug(String.format("Neoden move to to %.3f,%.3f", x, y));
     	
     	//allow moves max 3mm with nozzles lowered
-    	if(Utils2D.distance(start,end)>3.1) {
-            moveZ(1, 0);
-            moveZ(2, 0);
-            moveZ(3, 0);
-            moveZ(4, 0);		
+    	if(distance(this.x - x, this.y - y) > 3.1) {
+    		retractNozzles();
     	}
         
     	double comp = backlashCompensation;
         moveXy(x+comp, y+comp);
-        setMoveSpeed(0.05);
+        Thread.sleep(10);
+        setMoveSpeed(0.1);
+        Thread.sleep(10);
     	moveXy(x,y);
+    	Thread.sleep(10);
     }
 
     private void moveXy(double x, double y) throws Exception {
@@ -522,6 +540,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         writeWithChecksum(b);
         
         pollFor(0x01, 0x45);
+        //Thread.sleep(300);
     }
 
     private void setMoveSpeed(double speed) throws Exception {
@@ -585,8 +604,6 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         b[2] = (byte) strength;
         writeWithChecksum(b);
         
-
-        
         pollFor(0x0c, 0x49);
     }
     
@@ -619,9 +636,11 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         // coordinate.
         x = Double.isNaN(x) ? this.x : x;
         y = Double.isNaN(y) ? this.y : y;
-        if (x != this.x || y != this.y) {
+        if (distance(this.x - x, this.y - y) > 0.0001) {
             setMoveSpeed(speed);
             moveXySafe(x, y);
+            
+            Logger.debug("MoveXY");
             
             this.x = x;
             this.y = y;
@@ -635,7 +654,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Double.isNaN(z) ? this.z1 : z;
                 z = Math.min(z, minZ);
                 z = Math.max(z, maxZ);
-                if (z != this.z1) {
+                if (Math.abs(z-this.z1)>0.001) {
+                	Logger.debug("MoveZ");
                     moveZ(1, z);
                     this.z1 = z;
                 }
@@ -643,7 +663,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Double.isNaN(c) ? this.c1 : c;
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
-                if (c != this.c1) {
+                if (Math.abs(c-this.c1)>0.001) {
+                	Logger.debug("MoveC");
                     moveC(1, c);
                     this.c1 = c;
                 }
@@ -652,7 +673,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Double.isNaN(z) ? this.z2 : z;
                 z = Math.min(z, minZ);
                 z = Math.max(z, maxZ);
-                if (z != this.z2) {
+                if (Math.abs(z-this.z2)>0.001) {
                     moveZ(2, z);
                     this.z2 = z;
                 }
@@ -660,7 +681,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Double.isNaN(c) ? this.c2 : c;
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
-                if (c != this.c2) {
+                if (Math.abs(c-this.c2)>0.001) {
                     moveC(2, c);
                     this.c2 = c;
                 }
@@ -669,7 +690,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Double.isNaN(z) ? this.z3 : z;
                 z = Math.min(z, minZ);
                 z = Math.max(z, maxZ);
-                if (z != this.z3) {
+                if (Math.abs(z-this.z3)>0.001) {
                     moveZ(3, z);
                     this.z3 = z;
                 }
@@ -677,7 +698,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Double.isNaN(c) ? this.c3 : c;
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
-                if (c != this.c3) {
+                if (Math.abs(c-this.c3)>0.001) {
                     moveC(3, c);
                     this.c3 = c;
                 }
@@ -686,7 +707,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Double.isNaN(z) ? this.z4 : z;
                 z = Math.min(z, minZ);
                 z = Math.max(z, maxZ);
-                if (z != this.z4) {
+                if (Math.abs(z-this.z4)>0.001) {
                     moveZ(4, z);
                     this.z4 = z;
                 }
@@ -694,7 +715,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Double.isNaN(c) ? this.c4 : c;
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
-                if (c != this.c4) {
+                if (Math.abs(c-this.c4)>0.001) {
                     moveC(4, c);
                     this.c4 = c;
                 }
@@ -704,6 +725,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         // Store the new location to the axes.
         location.setToDriverCoordinates(this);
         motionPending = true;
+        
     }
 
     @Override
@@ -739,8 +761,9 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             case ACT_N4_BLOW: {
                 if (on) {
                     actuate(actuator, 127.0);
-                } else {
+                    Thread.sleep(200);
                     actuate(actuator, 0.0);
+                } else {
                 }
                 break;
             }
