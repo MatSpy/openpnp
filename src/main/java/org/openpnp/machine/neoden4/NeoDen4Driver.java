@@ -126,7 +126,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     private boolean connected;
     private Set<Nozzle> pickedNozzles = new HashSet<>();
 
-    double backlashCompensation = 1;
+    double backlashCompensation = 0.5;
     double globalOffsetX = 0, globalOffsetY = 0;
     
     double x = 0, y = 0;
@@ -371,6 +371,10 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         moveZ(2, 0);
         moveZ(3, 0);
         moveZ(4, 0);
+        moveC(1, 0);
+        moveC(2, 0);
+        moveC(3, 0);
+        moveC(4, 0);
 
         /* Now, send home command */
         write(0x47);
@@ -450,8 +454,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     	double comp = backlashCompensation;
         moveXy(x+comp, y+comp);
         Thread.sleep(10);
-        setMoveSpeed(0.1);
-        Thread.sleep(10);
+        setMoveSpeed(0.05);
+        Thread.sleep(100);
     	moveXy(x,y);
     	Thread.sleep(10);
     }
@@ -527,6 +531,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     }
     
     private void moveC(int nozzle, double c) throws Exception {
+//    	Thread.sleep(500);
         write(0x41);
         expect(0x0d);
         
@@ -540,7 +545,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         writeWithChecksum(b);
         
         pollFor(0x01, 0x45);
-        //Thread.sleep(300);
+        Thread.sleep(300);
     }
 
     private void setMoveSpeed(double speed) throws Exception {
@@ -637,6 +642,9 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         x = Double.isNaN(x) ? this.x : x;
         y = Double.isNaN(y) ? this.y : y;
         if (distance(this.x - x, this.y - y) > 0.0001) {
+        	if(distance(this.x - x, this.y - y) <= 10.1) {
+        		speed = 0.2;
+        	}
             setMoveSpeed(speed);
             moveXySafe(x, y);
             
@@ -655,7 +663,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Math.min(z, minZ);
                 z = Math.max(z, maxZ);
                 if (Math.abs(z-this.z1)>0.001) {
-                	Logger.debug("MoveZ");
+                	Logger.debug("MoveZ1");
                     moveZ(1, z);
                     this.z1 = z;
                 }
@@ -664,8 +672,9 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c1)>0.001) {
-                	Logger.debug("MoveC");
+                	Logger.debug("MoveC1");
                     moveC(1, c);
+//                    moveC(1, c);
                     this.c1 = c;
                 }
                 break;
@@ -675,6 +684,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 z = Math.max(z, maxZ);
                 if (Math.abs(z-this.z2)>0.001) {
                     moveZ(2, z);
+                    Logger.debug("MoveZ2");
                     this.z2 = z;
                 }
                 
@@ -683,6 +693,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c2)>0.001) {
                     moveC(2, c);
+//                    moveC(2, c);
+                    Logger.debug("MoveC2");
                     this.c2 = c;
                 }
                 break;
@@ -700,6 +712,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c3)>0.001) {
                     moveC(3, c);
+                    moveC(3, c);
                     this.c3 = c;
                 }
                 break;
@@ -716,6 +729,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.max(c, -180.);
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c4)>0.001) {
+                    moveC(4, c);
                     moveC(4, c);
                     this.c4 = c;
                 }
