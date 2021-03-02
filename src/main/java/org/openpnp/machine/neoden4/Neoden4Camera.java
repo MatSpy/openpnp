@@ -20,6 +20,7 @@
 package org.openpnp.machine.neoden4;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageFilter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -80,6 +81,30 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
 //    	return null;
 //    }
     
+    private BufferedImage convertToRgb(BufferedImage image) {
+    	
+	    int iw = image.getWidth();
+	    int ih = image.getHeight();
+	
+	    BufferedImage imageOut = 
+	    	    new BufferedImage(iw, ih, BufferedImage.TYPE_INT_BGR);
+	    
+	    for (int y = 0; y < ih; y++) {
+	      for (int x = 0; x < iw; x++) {
+	        int pixel = image.getRGB(x, y);
+	        int red = (pixel >> 16) & 0xFF;
+	        int green = (pixel >> 8) & 0xFF;
+	        int blue = pixel & 0xFF;
+	        
+	        int col = (red << 16) | (green << 8) | blue;
+	        imageOut.setRGB(x, y, col);
+	        
+	      }
+	    }
+	    
+	    return imageOut;  
+    }
+    
     @Override
     public synchronized BufferedImage internalCapture() {
         //Logger.trace(String.format("internalCapture() [cameraId:%d]", cameraId));
@@ -108,8 +133,10 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             
         	if(tryCapture) {
 	            BufferedImage img = ImageIO.read(snapshotURI);
+	            
+	            BufferedImage imgRGB = convertToRgb(img);
 	            Thread.sleep(10);
-	            return img;
+	            return imgRGB;
         	}else
         	{
         		Thread.sleep(100);
