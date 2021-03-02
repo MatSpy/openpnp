@@ -765,6 +765,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                     actuate(actuator, -128.0);
                 } else {
                     actuate(actuator, 20.0);
+                    Thread.sleep(400);
                     actuate(actuator, 0.0);
                 }
                 break;
@@ -775,7 +776,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             case ACT_N4_BLOW: {
                 if (on) {
                     actuate(actuator, 127.0);
-                    Thread.sleep(200);
+                    Thread.sleep(400);
                     actuate(actuator, 0.0);
                 } else {
                 }
