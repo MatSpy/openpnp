@@ -151,7 +151,7 @@ public class Panel extends AbstractModelObject implements Identifiable {
                 }
 
                 // deep copy the existing rootpcb
-                BoardLocation newPCB = new BoardLocation(rootPCB);
+                BoardLocation newPCB = new BoardLocation(rootPCB.getBoard());
 
                 // OFfset the sub PCB
                 newPCB.setLocation(newPCB.getLocation()
