@@ -431,6 +431,12 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
             moveZ(2, 0);
             moveZ(3, 0);
             moveZ(4, 0);
+            
+            this.z1 = 0;
+            this.z2 = 0;
+            this.z3 = 0;
+            this.z4 = 0;
+            
             Thread.sleep(300);
     	}
     }
@@ -511,6 +517,8 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         // Neoden thinks 13.0 is max retracted into the head, 0 is max out.
         // In our world, 0 is max up and -13 is max down.
       
+    	Logger.debug("Move Z");
+    	
         z = Math.abs(z) * 1000.;
         
         write(0x42);
