@@ -604,21 +604,45 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     }
 
     public void peel(int id, int strength, int feedRate) throws Exception {
-        write(0x4c);
-        expect(0x01);
-        
-        write(0xcc);
-        expect(0x09);
-        
-        byte[] b = new byte[8];
-        // Speed is percentage of max speed.  Speed is really 10-130
-        //putInt16((int) ((120. * speed)+10), b, 0);
-        b[0] = (byte) id;
-        b[1] = (byte) feedRate;
-        b[2] = (byte) strength;
-        writeWithChecksum(b);
-        
-        pollFor(0x0c, 0x49);
+    	
+    	boolean isTopHalf = false;
+    	
+    	if(id >= 20) {
+    		isTopHalf = true;
+    	}
+    	
+    	if(!isTopHalf) {
+            write(0x4c);
+            expect(0x01);
+            
+            write(0xcc);
+            expect(0x09);
+            
+            byte[] b = new byte[8];
+            b[0] = (byte) id;
+            b[1] = (byte) feedRate;
+            b[2] = (byte) strength;
+            writeWithChecksum(b);
+            
+            pollFor(0x0c, 0x49);
+    	}
+    	else {
+
+    		write(0x4e);
+    		expect(0x03);
+
+    		write(0xce);
+    		expect(0x0B);
+
+    		byte[] b = new byte[8];
+    		b[0] = (byte) (id-19);
+    		b[1] = (byte) feedRate;
+    		b[2] = (byte) strength;
+    		writeWithChecksum(b);
+
+    		pollFor(0x0E, 0x4B);
+	
+    	}
     }
     
     @Override
