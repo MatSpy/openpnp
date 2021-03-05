@@ -112,6 +112,11 @@ public class OrientRotatedRects extends CvStage {
         	if(angle > 45) {
         		angle -= 90;
         	}
+        	else {
+                double tmp = r2.size.height;
+                r2.size.height = r2.size.width;
+                r2.size.width = tmp;
+        	}
         	r2.angle = angle + snapAngle;
         }
         if (negateAngle) {
