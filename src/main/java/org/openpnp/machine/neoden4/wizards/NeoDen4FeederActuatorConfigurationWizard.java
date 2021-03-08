@@ -49,22 +49,22 @@ public class NeoDen4FeederActuatorConfigurationWizard extends AbstractActuatorCo
     private JComboBox driver;
     
     private JLabel lblPeelerId;
-    private JTextField PeelerIdTextField;
+    private JTextField peelerIdTextField;
     
     private JLabel lblFeederId;
-    private JTextField FeederIdTextField;
+    private JTextField feederIdTextField;
     
     private JLabel lblPeelStrength;
-    private JTextField PeelStrengthTextField;
+    private JTextField peelStrengthTextField;
     
     private JLabel lblFeedStrength;
-    private JTextField FeedStrengthTextField;
+    private JTextField feedStrengthTextField;
     
     private JLabel lblFeedLength;
-    private JTextField FeedLengthTextField;
+    private JTextField feedLengthTextField;
     
     private JLabel lblPeelLength;
-    private JTextField PeelLengthTextField;
+    private JTextField peelLengthTextField;
     
     public NeoDen4FeederActuatorConfigurationWizard(AbstractMachine machine, NeoDen4FeederActuator actuator) {
         super(machine,  actuator);
@@ -125,44 +125,44 @@ public class NeoDen4FeederActuatorConfigurationWizard extends AbstractActuatorCo
         lblPeelerId = new JLabel("Peeler ID");
         panelProperties.add(lblPeelerId, "2, 6, right, default");
         
-        PeelerIdTextField = new JTextField();
-        panelProperties.add(PeelerIdTextField, "4, 6, fill, default");
-        PeelerIdTextField.setColumns(16);
+        peelerIdTextField = new JTextField();
+        panelProperties.add(peelerIdTextField, "4, 6, fill, default");
+        peelerIdTextField.setColumns(16);
         
         lblFeederId = new JLabel("Feeder ID");
         panelProperties.add(lblFeederId, "2, 8, right, default");
         
-        FeederIdTextField = new JTextField();
-        panelProperties.add(FeederIdTextField, "4, 8, fill, default");
-        FeederIdTextField.setColumns(16);     
+        feederIdTextField = new JTextField();
+        panelProperties.add(feederIdTextField, "4, 8, fill, default");
+        feederIdTextField.setColumns(16);     
         
         lblFeedStrength = new JLabel("Feed Strength");
         panelProperties.add(lblFeedStrength, "2, 10, right, default");
         
-        FeedStrengthTextField = new JTextField();
-        panelProperties.add(FeedStrengthTextField, "4, 10, fill, default");
-        FeedStrengthTextField.setColumns(16);     
+        feedStrengthTextField = new JTextField();
+        panelProperties.add(feedStrengthTextField, "4, 10, fill, default");
+        feedStrengthTextField.setColumns(16);     
      
         lblPeelStrength = new JLabel("Peel Strength");
         panelProperties.add(lblPeelStrength, "2, 12, right, default");
         
-        PeelStrengthTextField = new JTextField();
-        panelProperties.add(PeelStrengthTextField, "4, 12, fill, default");
-        PeelStrengthTextField.setColumns(16);
+        peelStrengthTextField = new JTextField();
+        panelProperties.add(peelStrengthTextField, "4, 12, fill, default");
+        peelStrengthTextField.setColumns(16);
         
         lblFeedLength = new JLabel("Feed length");
         panelProperties.add(lblFeedLength, "2, 14, right, default");
         
-        FeedLengthTextField = new JTextField();
-        panelProperties.add(FeedLengthTextField, "4, 14, fill, default");
-        FeedLengthTextField.setColumns(16);
+        feedLengthTextField = new JTextField();
+        panelProperties.add(feedLengthTextField, "4, 14, fill, default");
+        feedLengthTextField.setColumns(16);
         
         lblPeelLength = new JLabel("Peel length");
         panelProperties.add(lblPeelLength, "2, 16, right, default");
         
-        PeelLengthTextField = new JTextField();
-        panelProperties.add(PeelLengthTextField, "4, 16, fill, default");
-        PeelLengthTextField.setColumns(16);
+        peelLengthTextField = new JTextField();
+        panelProperties.add(peelLengthTextField, "4, 16, fill, default");
+        peelLengthTextField.setColumns(16);
         
         super.createUi(machine);
     }
@@ -178,12 +178,12 @@ public class NeoDen4FeederActuatorConfigurationWizard extends AbstractActuatorCo
         addWrappedBinding(actuator, "driver", driver, "selectedItem", driverConverter);
         addWrappedBinding(actuator, "name", nameTf, "text");
         
-        addWrappedBinding(actuator, "peelerId", PeelerIdTextField, "text", intConverter);
-        addWrappedBinding(actuator, "feederId", FeederIdTextField, "text", intConverter);
-        addWrappedBinding(actuator, "feedStrength", FeedStrengthTextField, "text", intConverter);
-        addWrappedBinding(actuator, "peelStrength", PeelStrengthTextField, "text", intConverter);
-        addWrappedBinding(actuator, "feedLength", FeedLengthTextField, "text", intConverter);
-        addWrappedBinding(actuator, "peelLength", PeelLengthTextField, "text", intConverter);
+        addWrappedBinding(actuator, "peelerId", peelerIdTextField, "text", intConverter);
+        addWrappedBinding(actuator, "feederId", feederIdTextField, "text", intConverter);
+        addWrappedBinding(actuator, "feedStrength", feedStrengthTextField, "text", intConverter);
+        addWrappedBinding(actuator, "peelStrength", peelStrengthTextField, "text", intConverter);
+        addWrappedBinding(actuator, "feedLength", feedLengthTextField, "text", intConverter);
+        addWrappedBinding(actuator, "peelLength", peelLengthTextField, "text", intConverter);
         
         ComponentDecorators.decorateWithAutoSelect(nameTf);
     }
