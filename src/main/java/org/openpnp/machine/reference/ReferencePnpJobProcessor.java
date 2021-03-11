@@ -77,6 +77,8 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
     @Attribute(required = false)
     protected int maxVisionRetries = 3;
 
+    protected int maxPlacementRetries = 2;
+    
     @Element(required = false)
     public PnpJobPlanner planner = new StraightforwardPnpJobPlanner();
 
@@ -1187,16 +1189,24 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                 return result;
             }
             catch (JobProcessorException e) {
-                switch (plannedPlacement.jobPlacement.getPlacement().getErrorHandling()) {
-                    case Alert:
-                        throw e;
-                    case Defer:
-                        plannedPlacement.jobPlacement.setError(e);
-                        return this;
-                    default:
-                        throw new Error("Unhandled Error Handling case " + plannedPlacement.jobPlacement.getPlacement().getErrorHandling());
-                }
+            	plannedPlacement.jobPlacement.failNumber++;
+            	
+            	if(plannedPlacement.jobPlacement.failNumber++ >= maxPlacementRetries) {
+            	
+	                switch (plannedPlacement.jobPlacement.getPlacement().getErrorHandling()) {
+	                    case Alert:
+	                        throw e;
+	                    case Defer:
+	                        plannedPlacement.jobPlacement.setError(e);
+	                        return this;
+	                    default:
+	                        throw new Error("Unhandled Error Handling case " + plannedPlacement.jobPlacement.getPlacement().getErrorHandling());
+	                }
+            	}
+            	
             }
+            Step result = stepImpl(plannedPlacement); 
+            return result;
         }
     }
 

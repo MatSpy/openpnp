@@ -13,6 +13,7 @@ public interface PnpJobProcessor extends JobProcessor {
             Errored,
             Complete
         }
+        public int failNumber = 0;
 
         private final BoardLocation boardLocation;
         private final Placement placement;
