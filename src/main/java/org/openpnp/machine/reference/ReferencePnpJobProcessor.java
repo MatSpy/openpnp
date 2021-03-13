@@ -700,8 +700,25 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
                 fireTextStatus("Pick %s from %s for %s.", part.getId(), feeder.getName(),
                         placement.getId());
                 
+                
+                //-------------------------------------------------------------------
+                //HERE IS HACK
+                Location pick = feeder.getPickLocation();
+                Location placeLocation = placement.getLocation();
+                
+//                pick -2
+//                place 180
+//                newPick -92 = (90 - place) + pick
+                
+                
+                Location newPickLocation = new Location(LengthUnit.Millimeters,pick.getX(),pick.getY(),pick.getZ(), pick.getRotation() + 90 - placeLocation.getRotation());
+                
+                //HERE IS HACK                
+                //-------------------------------------------------------------------
+                
+                
                 // Move to pick location.
-                MovableUtils.moveToLocationAtSafeZ(nozzle, feeder.getPickLocation());
+                MovableUtils.moveToLocationAtSafeZ(nozzle, newPickLocation);
 
                 // Pick
                 nozzle.pick(part);
@@ -766,7 +783,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
             }
             
             
-            Exception lastException = null;
+           
             try {
             	align(plannedPlacement, partAlignment);
             	part.failNumber = 0;
@@ -784,7 +801,7 @@ public class ReferencePnpJobProcessor extends AbstractPnpJobProcessor {
             		plannedPlacement.jobPlacement.setStatus(Status.Pending);
             	}
 
-            	lastException = e;
+            	
             }
 
             checkPartOn(nozzle);

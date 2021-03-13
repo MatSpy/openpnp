@@ -35,6 +35,8 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;
 
+import jnr.ffi.Struct.Offset;
+
 public class ReferenceBottomVision implements PartAlignment {
 
 
@@ -107,6 +109,10 @@ public class ReferenceBottomVision implements PartAlignment {
             wantedAngle = Utils2D.calculateBoardPlacementLocation(boardLocation, placementLocation)
                            .getRotation();
         }
+        
+        double diff = wantedAngle - 90;
+        wantedAngle = 90;
+        
         wantedAngle = angleNorm(wantedAngle, 180.);
         // Wanted location.
         Location wantedLocation = getCameraLocationAtPartHeight(part, camera, nozzle, wantedAngle);
@@ -181,9 +187,16 @@ public class ReferenceBottomVision implements PartAlignment {
                 // Not a good enough fix - try again with corrected position.
                 nozzle.moveTo(nozzleLocation);
             }
+            
+                   
+            
             Logger.debug("Offsets accepted {}", offsets);
             // Calculate cumulative offsets over all the passes.  
             offsets = wantedLocation.subtractWithRotation(nozzleLocation);
+            
+            offsets = offsets.derive(null, null, null, offsets.getRotation()+diff);
+            
+            
             Logger.debug("Final offsets {}", offsets);
             displayResult(pipeline, part, offsets, camera);
             return new PartAlignment.PartAlignmentOffset(offsets, true);
