@@ -49,6 +49,12 @@ public class Part extends AbstractModelObject implements Identifiable {
     
     @Attribute(required = false)
     private int pickRetryCount = 0;
+    
+    @Attribute(required = false)
+    private int placeRetryCount = 2;
+    
+    
+    public int failNumber = 0;
 
 
     @SuppressWarnings("unused")
@@ -125,6 +131,14 @@ public class Part extends AbstractModelObject implements Identifiable {
         firePropertyChange("height", oldValue, getHeight());
     }
 
+    public int getPlaceRetryCount() {
+        return placeRetryCount;
+    }
+    
+    public void setPlaceRetryCount(int maxFailNumber) {
+    	this.placeRetryCount = maxFailNumber;
+    }
+    
     public Package getPackage() {
         return packag;
     }

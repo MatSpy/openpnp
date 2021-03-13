@@ -46,6 +46,8 @@ public class PartSettingsPanel extends JPanel {
     private JPanel pickConditionsPanel;
     private JLabel lblNewLabel;
     private JTextField pickRetryCount;
+    private JLabel lblPlaceRetryCount;
+    private JTextField placeRetryCount;
 
     public PartSettingsPanel(Part part) {
         this.part = part;
@@ -66,6 +68,8 @@ public class PartSettingsPanel extends JPanel {
                 ColumnSpec.decode("default:grow"),},
             new RowSpec[] {
                 FormSpecs.RELATED_GAP_ROWSPEC,
+                FormSpecs.DEFAULT_ROWSPEC,
+                FormSpecs.RELATED_GAP_ROWSPEC,
                 FormSpecs.DEFAULT_ROWSPEC,}));
         
         lblNewLabel = new JLabel("Pick Retry Count");
@@ -74,6 +78,14 @@ public class PartSettingsPanel extends JPanel {
         pickRetryCount = new JTextField();
         pickConditionsPanel.add(pickRetryCount, "4, 2, left, default");
         pickRetryCount.setColumns(10);
+        
+        lblPlaceRetryCount = new JLabel("Place Retry Count");
+        pickConditionsPanel.add(lblPlaceRetryCount, "2, 4, right, default");
+        
+        placeRetryCount = new JTextField();
+        pickConditionsPanel.add(placeRetryCount, "4, 4, left, default");
+        placeRetryCount.setColumns(10);
+        
     }
     
     protected void initDataBindings() {
@@ -81,7 +93,16 @@ public class PartSettingsPanel extends JPanel {
         BeanProperty<JTextField, String> jTextFieldBeanProperty = BeanProperty.create("text");
         AutoBinding<Part, Integer, JTextField, String> autoBinding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, part, partBeanProperty, pickRetryCount, jTextFieldBeanProperty);
         autoBinding.bind();
-        
         ComponentDecorators.decorateWithAutoSelect(pickRetryCount);
+        
+        BeanProperty<Part, Integer> partPlaceBeanProperty = BeanProperty.create("placeRetryCount");
+        BeanProperty<JTextField, String> jTextPlaceFieldBeanProperty = BeanProperty.create("text");
+        AutoBinding<Part, Integer, JTextField, String> autoBinding2 = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE, part, partPlaceBeanProperty, placeRetryCount, jTextPlaceFieldBeanProperty);
+        autoBinding2.bind();
+        ComponentDecorators.decorateWithAutoSelect(placeRetryCount);  
+        
+        
+        
+        
     }
 }
