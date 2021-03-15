@@ -132,6 +132,9 @@ public class Neoden4Camera extends ReferenceCamera implements Runnable {
             
             
         	if(tryCapture) {
+        		setCameraLt();
+        		setCameraWidthHeight();
+        		snapshotURI = getImageReadAsyURL();
 	            BufferedImage img = ImageIO.read(snapshotURI);
 	            
 	            BufferedImage imgRGB = convertToRgb(img);

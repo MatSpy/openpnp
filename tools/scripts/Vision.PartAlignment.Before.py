@@ -7,7 +7,7 @@ print("NEODEN UP camera part size:", length)
 
 camera = machine.getCameras()[0]
 
-if length < 3:
+if length < 4:
 	camera.width = 256
 	camera.height = 256
 	camera.shiftX = 384
