@@ -555,6 +555,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         writeWithChecksum(b);
         
         pollFor(0x01, 0x45);
+        Thread.sleep(10);
     }
 
     private void setMoveSpeed(double speed) throws Exception {
@@ -572,6 +573,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
         writeWithChecksum(b);
         
         pollFor(0x06, 0x42);
+        Thread.sleep(10);
     }
     
     public void feed(int id, int strength, int feedRate) throws Exception {
@@ -641,6 +643,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
     		writeWithChecksum(b);
 
     		pollFor(0x0E, 0x4B);
+    		Thread.sleep(10);
 	
     	}
     }
@@ -689,7 +692,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c1)>0.001) {
                     moveC(1, c);
-                    moveC(1, c);
+//                    moveC(1, c);
                     this.c1 = c;
                     isDelayNeeded = true;
                 }
@@ -701,7 +704,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c2)>0.001) {
                     moveC(2, c);
-                    moveC(2, c);
+//                    moveC(2, c);
                     this.c2 = c;
                     isDelayNeeded = true;
                 }
@@ -712,7 +715,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c3)>0.001) {
                     moveC(3, c);
-                    moveC(3, c);
+//                    moveC(3, c);
                     this.c3 = c;
                     isDelayNeeded = true;
                 }
@@ -724,7 +727,7 @@ public class NeoDen4Driver extends AbstractReferenceDriver {
                 c = Math.min(c, 180.);                
                 if (Math.abs(c-this.c4)>0.001) {
                     moveC(4, c);
-                    moveC(4, c);
+//                    moveC(4, c);
                     this.c4 = c;
                     isDelayNeeded = true;
                 }
